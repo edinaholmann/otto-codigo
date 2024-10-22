@@ -1,0 +1,91 @@
+#include <Servo.h>
+
+// Definir os servos das pernas
+Servo servo_esquerda_frontal;
+Servo servo_direita_frontal;
+Servo servo_esquerda_traseira;
+Servo servo_direita_traseira;
+
+// Definir os pinos dos servos
+int pino_servo_esquerda_frontal = 2;
+int pino_servo_direita_frontal = 3;
+int pino_servo_esquerda_traseira = 4;
+int pino_servo_direita_traseira = 5;
+
+// Pino do sensor de batimentos cardíacos
+int pino_sensor_batimentos = A0;
+
+// Variáveis para armazenar valores de batimento
+int batimento;
+int limite_inferior = 60; // Limite inferior da média boa
+int limite_superior = 100; // Limite superior da média boa
+
+void setup() {
+  // Iniciar comunicação serial
+  Serial.begin(9600);
+
+  // Iniciar os servos
+  servo_esquerda_frontal.attach(pino_servo_esquerda_frontal);
+  servo_direita_frontal.attach(pino_servo_direita_frontal);
+  servo_esquerda_traseira.attach(pino_servo_esquerda_traseira);
+  servo_direita_traseira.attach(pino_servo_direita_traseira);
+
+  // Definir a posição inicial dos servos
+  servo_esquerda_frontal.write(90);
+  servo_direita_frontal.write(90);
+  servo_esquerda_traseira.write(90);
+  servo_direita_traseira.write(90);
+}
+void loop() {
+  // Ler o valor do sensor de batimentos cardíacos
+  batimento = analogRead(pino_sensor_batimentos);
+  Serial.print("Batimentos detectados: ");
+  Serial.println(batimento);
+
+  // Verificar se os batimentos estão dentro da média boa
+  if (batimento >= limite_inferior && batimento <= limite_superior) {
+    Serial.println("Batimentos dentro da média, Otto vai dançar!");
+    dancar();
+  } else {
+    Serial.println("Batimentos fora da média, Otto vai andar.");
+    andarFrente();
+  }
+
+  delay(1000); // Pausa de 1 segundo entre leituras e movimentos
+}
+
+// Função para o Otto andar para frente
+void andarFrente() {
+  // Movimento da perna esquerda para frente
+  servo_esquerda_frontal.write(70); // Levantar a perna
+  delay(300);
+  servo_esquerda_traseira.write(110); // Mover para frente
+  delay(300);
+  servo_esquerda_frontal.write(90); // Voltar à posição
+  delay(300);
+
+ // Movimento da perna direita para frente
+  servo_direita_frontal.write(70); // Levantar a perna
+  delay(300);
+  servo_direita_traseira.write(110); // Mover para frente
+  delay(300);
+  servo_direita_frontal.write(90); // Voltar à posição
+  delay(300);
+}
+
+// Função para o Otto dançar
+void dancar() {
+  // Mover as pernas para simular uma dança
+}  for (int i = 0; i < 3; i++) {
+    servo_esquerda_frontal.write(60); // Movimento para a esquerda
+    servo_direita_frontal.write(120); // Movimento para a direita
+    delay(200);
+    servo_esquerda_frontal.write(120); // Movimento para a direita
+    servo_direita_frontal.write(60);  // Movimento para a esquerda
+    delay(200);
+  }
+
+  // Voltar à posição central
+  servo_esquerda_frontal.write(90);
+  servo_direita_frontal.write(90);
+   delay(300);
